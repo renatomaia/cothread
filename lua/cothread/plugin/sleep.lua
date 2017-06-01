@@ -62,7 +62,7 @@ return function(_ENV, cothread)
 			elseif scheduled[waker] ~= waker then                                     --[[VERBOSE]] verbose:scheduler("other threads are ready to be resumed")
 				idle(now())
 				yield("yield")
-			else                                                                      --[[VERBOSE]] verbose:scheduler("nothing to be done until ",time)
+			else                                                                      --[[VERBOSE]] verbose:scheduler("nothing to be done until ",strformat("%.2f", time-begin))
 				idle(time)
 			end
 		end
@@ -175,6 +175,11 @@ return function(_ENV, cothread)
 		end
 		return thread, timestamp
 	end
+
+	moduleop("hasdeferred", function()
+		return wakeindex:nextnode() ~= nil
+	end, "yieldable")
+
 	moduleop("alldeferred", function()
 		local first = wakeindex:nextnode()
 		if first == nil then return nextthread, nil, nil end
