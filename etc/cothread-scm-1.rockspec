@@ -1,8 +1,8 @@
 package = "CoThread"
 version = "scm-1"
 source = {
-	url = "https://github.com/renatomaia/luacothread/archive/master.zip",
-	dir = "luacothread-master",
+	url = "https://github.com/renatomaia/cothread/archive/master.zip",
+	dir = "cothread-master",
 }
 description = {
 	summary = "Cooperative Multithreading using Lua Coroutines",
@@ -13,14 +13,14 @@ description = {
 		of module extensions or extra modules with utility functions and objects.
 	]],
 	license = "MIT",
-	homepage = "http://www.tecgraf.puc-rio.br/~maia/lua/cothread",
+	homepage = "https://github.com/renatomaia/cothread",
 }
 dependencies = {
 	"lua >= 5.1",
 	"loop >= 3.0, < 4.0",
-	"loopcollections >= 1.0beta, < 2.0",
-	"loopdebugging >= 1.0beta, < 2.0",
-	"loopobjects >= 1.0beta, < 2.0",
+	"loopcollections == scm",
+	"loopdebugging == scm",
+	"loopobjects == scm",
 }
 build = {
 	type = "builtin",
