@@ -65,9 +65,12 @@ return function(_ENV, cothread)
 	scheduleop("wait", function(thread, signal, ...)
 		local last = lastwait[signal]
 		if last ~= thread then
+			if last ~= nil then
+				signalof[last] = nil
+				onreschedule(last, nil)
+			end
 			reschedule(thread, last)
 			newsignal(signal, thread)
-			last = thread
 		end                                                                         --[[VERBOSE]] verbose:threads(thread," scheduled as waiting ",signal);verbose:state()
 		return thread, ...
 	end)
@@ -78,7 +81,7 @@ return function(_ENV, cothread)
 			freesignal(signal, last)
 			onreschedule(last, nil)
 			scheduled:movefrom(last, lastready, last)
-			lastready = last
+			lastready = last                                                          --[[VERBOSE]] verbose:threads(last," and others were waken"); verbose:state()
 			return true
 		end
 	end, "yieldable")
