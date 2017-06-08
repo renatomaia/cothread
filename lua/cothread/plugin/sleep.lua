@@ -164,16 +164,16 @@ return function(_ENV, cothread)
 		return defer(thread, now()+time, ...)
 	end)
 
-	local function nextdelayed(state, previous, timestamp)
-		if previous == nil then return state.first, timestamp end
+	local function nextdelayed(state, previous)
+		if previous == nil then return state.first, state.timestamp end
 		local thread = scheduled[previous]
 		if thread == state.first then return end
 		local nextwake = state.nextwake
 		if nextwake and nextwake.value == thread then
+			state.timestamp = nextwake.key
 			state.nextwake = wakeindex:nextnode(nextwake)
-			timestamp = nextwake.key
 		end
-		return thread, timestamp
+		return thread, state.timestamp
 	end
 
 	moduleop("hasdeferred", function()
@@ -183,8 +183,12 @@ return function(_ENV, cothread)
 	moduleop("alldeferred", function()
 		local first = wakeindex:nextnode()
 		if first == nil then return nextthread, nil, nil end
-		local state = { first = first.value, nextwake = wakeindex:nextnode(first) }
-		return nextdelayed, state, nil, first.key
+		local state = {
+			first = first.value,
+			timestamp = first.key,
+			nextwake = wakeindex:nextnode(first),
+		}
+		return nextdelayed, state, nil
 	end, "yieldable")
 
 	moduleop("now", now, "yieldable")
