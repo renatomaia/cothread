@@ -43,8 +43,10 @@ local function trywait(self, socket, op)
 end
 
 local CoSocket = {}
-local function wrap(socket)
-	if type(socket) == "userdata" then
+local function wrap(socket, ...)
+	if not socket then
+		return nil, ...
+	else type(socket) == "userdata" then
 		socket:settimeout(0)
 		socket = copy(CoSocket, Wrapper{ __object = socket })
 	end
